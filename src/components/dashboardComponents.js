@@ -43,7 +43,7 @@ export function renderPriceTable(body, rows) {
   if (rows.length === 0) {
     body.innerHTML = `
       <tr>
-        <td colspan="7">No rows match the selected filters.</td>
+        <td colspan="6">No rows match the selected filters.</td>
       </tr>
     `;
     return;
@@ -57,7 +57,6 @@ export function renderPriceTable(body, rows) {
           <td><strong class="restaurant-cell">${escapeHtml(row.restaurantName)}</strong></td>
           <td>${escapeHtml(row.dishName)}</td>
           <td>${formatCurrency(row.competitorPrice)}</td>
-          <td>${formatCurrency(row.yourPrice)}</td>
           <td>${formatSignedPercent(row.percentageDifference)}</td>
           <td>
             <div class="action-controls">

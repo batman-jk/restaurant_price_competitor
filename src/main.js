@@ -8,7 +8,6 @@ import {
   simulatePriceScrape,
 } from "./services/dataService.js";
 import {
-  applyManualActions,
   buildCompetitorRanking,
   buildLocalityInsights,
   buildRecommendation,
@@ -31,48 +30,59 @@ import {
 } from "./components/dashboardComponents.js";
 
 const RESTAURANT_IMAGE_MAP = {
-  Paradise:
-    "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1200&q=80",
-  "Spice Route Kitchen":
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80",
-  "Metro Tandoor House":
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80",
-  "Nizam Bowl House":
-    "https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?auto=format&fit=crop&w=1200&q=80",
-  "Urban Curry Lab":
-    "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1200&q=80",
-  "Charcoal Plate":
-    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80",
-  "Saffron Deck":
-    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80",
+  Paradise: "/images/paradise.jpg",
+  Mehfil: "/images/mehfil.jpeg",
+  "Shah Ghouse": "/images/shahghouse.jpg",
+  "Barbeque Nation": "/images/barbequenation.jpeg",
+  "Hotel Shadab": "/images/shadab.jpg",
+  Bawarchi: "/images/bawarchi.jpg",
+  "Pista House": "/images/pistahouse.jpeg",
+  Kritunga: "/images/kritunga.jpeg",
+  "Platform 65": "/images/platform65.jpeg",
 };
 
-const FOOD_IMAGES_BY_DISH = {
-  "Chicken Biryani": [
-    "https://images.unsplash.com/photo-1701579231305-d84d8af9a3fd?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1596797038530-2c107aa56a41?auto=format&fit=crop&w=700&q=80",
+const RESTAURANT_THUMB_IMAGES_MAP = {
+  Paradise: [
+    "/images/paradise1.jpg",
+    "/images/paradise2.jpg",
+    "/images/paradise3.webp",
   ],
-  "Paneer Biryani": [
-    "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=80",
+  Mehfil: ["/images/mehfil1.jpeg", "/images/mehfil2.avif", "/images/mehfil3.jpeg"],
+  "Shah Ghouse": [
+    "/images/shahghouose1.jpeg",
+    "/images/shahghouse2.jpeg",
+    "/images/shahghouse3.jpeg",
   ],
-  "Butter Chicken": [
-    "https://images.unsplash.com/photo-1604908176997-4311b1c9f22c?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1596797038530-2c107aa56a41?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=700&q=80",
+  "Barbeque Nation": [
+    "/images/barbequenation1.jpeg",
+    "/images/barbequenation2.jpeg",
+    "/images/barbequenation3.jpeg",
   ],
-  "Veg Hakka Noodles": [
-    "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1516901121982-4ba280115a36?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=700&q=80",
+  "Hotel Shadab": ["/images/shadab1.jpeg", "/images/shadab2.jpeg", "/images/shadab3.jpeg"],
+  Bawarchi: ["/images/bawarchi1.jpeg", "/images/bawarchi2.jpeg", "/images/bawarchi3.jpeg"],
+  "Pista House": [
+    "/images/pistahouse1.jpeg",
+    "/images/pistahouse2.jpeg",
+    "/images/pistahouse3.jpeg",
   ],
-  "Margherita Pizza": [
-    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=700&q=80",
+  Kritunga: ["/images/kritunga1.jpeg", "/images/kritunga2.jpeg", "/images/kritunga3.jpeg"],
+  "Platform 65": [
+    "/images/platform65_1.jpeg",
+    "/images/platform65_2.jpeg",
+    "/images/platform65_3.jpeg",
   ],
+};
+
+const RESTAURANT_LOCALITY_MAP = {
+  Paradise: "Old City",
+  Mehfil: "Chandanagar",
+  "Shah Ghouse": "Miyapur",
+  "Barbeque Nation": "Madhapur",
+  "Hotel Shadab": "Old City",
+  Bawarchi: "RTC X Roads",
+  "Pista House": "Bachupally",
+  Kritunga: "Kukatpally",
+  "Platform 65": "KPHB",
 };
 
 const state = {
@@ -156,16 +166,18 @@ function bindEvents() {
     const button = event.target.closest(".action-btn");
     if (!button) return;
 
-    const rowId = button.dataset.rowId;
     const action = button.dataset.action;
-    if (!rowId || !action) return;
+    if (!action) return;
 
-    const currentAdjustment = state.manualAdjustments[rowId] || 0;
     const step = getActionStepSize();
+    const scopedRows = getActionScopeRows();
 
-    if (action === "Increase") state.manualAdjustments[rowId] = currentAdjustment + step;
-    if (action === "Decrease") state.manualAdjustments[rowId] = currentAdjustment - step;
-    if (action === "Maintain") state.manualAdjustments[rowId] = 0;
+    scopedRows.forEach((row) => {
+      const currentAdjustment = state.manualAdjustments[row.id] || 0;
+      if (action === "Increase") state.manualAdjustments[row.id] = currentAdjustment + step;
+      if (action === "Decrease") state.manualAdjustments[row.id] = currentAdjustment - step;
+      if (action === "Maintain") state.manualAdjustments[row.id] = 0;
+    });
 
     renderDashboard();
   });
@@ -218,16 +230,18 @@ function hydrateFilters(rows) {
 function renderDashboard() {
   const latestRows = getLatestSnapshot(state.rows);
   const filteredLatest = applyFilters(latestRows, state.filters);
-  const adjustedLatest = applyManualActions(filteredLatest, state.manualAdjustments);
-  const sortedRows = sortRowsByCompetitorPrice(adjustedLatest, state.sortDirection);
-  const tableRows = enrichRowsWithSuggestions(sortedRows, state.manualAdjustments);
+  const metrics = calculateOverviewMetrics(filteredLatest);
 
-  const metrics = calculateOverviewMetrics(adjustedLatest);
-  const recommendation = buildRecommendation(adjustedLatest);
-  const localityInsights = buildLocalityInsights(adjustedLatest);
-  const rankings = buildCompetitorRanking(adjustedLatest);
-  const trendRows = applyManualActions(state.rows, state.manualAdjustments);
-  const trendSeries = getTrendSeries(trendRows, state.filters);
+  const sortedRows = sortRowsByCompetitorPrice(filteredLatest, state.sortDirection);
+  const tableRows = enrichRowsWithSuggestions(
+    sortedRows,
+    state.manualAdjustments,
+    metrics.yourCurrentPrice
+  );
+  const recommendation = buildRecommendation(filteredLatest);
+  const localityInsights = buildLocalityInsights(filteredLatest);
+  const rankings = buildCompetitorRanking(filteredLatest);
+  const trendSeries = getTrendSeries(state.rows, state.filters);
 
   renderKpiCards(dom.kpiGrid, metrics);
   renderPriceTable(dom.priceTableBody, tableRows);
@@ -252,34 +266,35 @@ function renderDashboard() {
 
 function renderRestaurantSpotlight(rows) {
   if (rows.length === 0) {
-    dom.restaurantSpotlightTitle.textContent = "Restaurant Spotlight";
-    dom.restaurantImage.src = fallbackRestaurantImage();
-    dom.foodThumbs.innerHTML = "";
+    dom.restaurantSpotlightTitle.textContent = "Paradise Spotlight - Old City";
+    setImageWithFallback(
+      dom.restaurantImage,
+      RESTAURANT_IMAGE_MAP.Paradise || fallbackRestaurantImage(),
+      fallbackRestaurantImage()
+    );
+    dom.restaurantImage.alt = "Paradise";
+    renderThumbImages("Paradise");
     return;
   }
 
   const focusedRestaurant =
     state.filters.restaurant !== "All"
       ? state.filters.restaurant
-      : mostFrequentRestaurant(rows);
+      : "Paradise";
   const focusedRows = rows.filter((row) => row.restaurantName === focusedRestaurant);
-  const focusDish = state.filters.dish || focusedRows[0]?.dishName || rows[0].dishName;
-  const focusLocality = focusedRows[0]?.locality ?? "";
+  const focusLocality = focusedRows[0]?.locality || RESTAURANT_LOCALITY_MAP[focusedRestaurant] || "";
 
   dom.restaurantSpotlightTitle.textContent = focusLocality
-    ? `Paradise Signature - ${focusLocality}`
-    : "Paradise Signature";
-  dom.restaurantImage.src = RESTAURANT_IMAGE_MAP.Paradise || fallbackRestaurantImage();
-  dom.restaurantImage.alt = "Paradise";
+    ? `${focusedRestaurant} Spotlight - ${focusLocality}`
+    : `${focusedRestaurant} Spotlight`;
+  setImageWithFallback(
+    dom.restaurantImage,
+    RESTAURANT_IMAGE_MAP[focusedRestaurant] || fallbackRestaurantImage(),
+    fallbackRestaurantImage()
+  );
+  dom.restaurantImage.alt = focusedRestaurant;
 
-  const foodImages = FOOD_IMAGES_BY_DISH[focusDish] || FOOD_IMAGES_BY_DISH["Chicken Biryani"];
-  dom.foodThumbs.innerHTML = foodImages
-    .map(
-      (imageUrl, index) => `
-        <img src="${imageUrl}" alt="${focusDish} visual ${index + 1}" />
-      `
-    )
-    .join("");
+  renderThumbImages(focusedRestaurant);
 }
 
 function renderEmptyState() {
@@ -336,7 +351,32 @@ function mostFrequentRestaurant(rows) {
 }
 
 function fallbackRestaurantImage() {
-  return "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1200&q=80";
+  return "/images/restaurant-placeholder.svg";
+}
+
+function fallbackFoodImage(index) {
+  return `/images/food-placeholder-${(index % 3) + 1}.svg`;
+}
+
+function renderThumbImages(restaurantName) {
+  const thumbImages =
+    RESTAURANT_THUMB_IMAGES_MAP[restaurantName] || RESTAURANT_THUMB_IMAGES_MAP.Paradise || [];
+  dom.foodThumbs.innerHTML = "";
+  thumbImages.forEach((imageUrl, index) => {
+    const img = document.createElement("img");
+    img.alt = `${restaurantName} visual ${index + 1}`;
+    setImageWithFallback(img, imageUrl, fallbackFoodImage(index));
+    dom.foodThumbs.appendChild(img);
+  });
+}
+
+function setImageWithFallback(imageElement, source, fallback) {
+  imageElement.onerror = null;
+  imageElement.src = source;
+  imageElement.onerror = () => {
+    imageElement.onerror = null;
+    imageElement.src = fallback;
+  };
 }
 
 function applyDishSelection(inputValue) {
@@ -367,4 +407,15 @@ function applyDishSelection(inputValue) {
   }
 
   dom.dishSearch.value = state.filters.dish;
+}
+
+function getActionScopeRows() {
+  return state.rows.filter((row) => {
+    const dishMatch = state.filters.dish ? row.dishName === state.filters.dish : true;
+    const platformMatch =
+      state.filters.platform === "All" || row.platform === state.filters.platform;
+    const restaurantMatch =
+      state.filters.restaurant === "All" || row.restaurantName === state.filters.restaurant;
+    return dishMatch && platformMatch && restaurantMatch;
+  });
 }

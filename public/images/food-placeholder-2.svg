@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="Food placeholder two">
+  <rect width="320" height="320" fill="#fee2e2" />
+  <circle cx="160" cy="165" r="96" fill="#fecaca" stroke="#f87171" stroke-width="8" />
+  <text x="160" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#991b1b">
+    Food Photo
+  </text>
+</svg>

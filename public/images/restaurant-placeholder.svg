@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Restaurant placeholder image">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#cbd5e1" />
+    </linearGradient>
+  </defs>
+  <rect width="960" height="600" fill="url(#bg)" />
+  <rect x="180" y="180" width="600" height="280" rx="18" fill="#f8fafc" stroke="#94a3b8" stroke-width="8" />
+  <text x="480" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" fill="#334155">
+    Paradise
+  </text>
+  <text x="480" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#64748b">
+    Restaurant Image Placeholder
+  </text>
+</svg>
