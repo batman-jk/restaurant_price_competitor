@@ -1,6 +1,6 @@
 const SMALL_MARGIN = 8;
 const ACTION_THRESHOLD = 8;
-const ACTION_STEP = 5;
+const ACTION_STEP = 1;
 
 export function getActionStepSize() {
   return ACTION_STEP;
@@ -60,6 +60,9 @@ export function buildRecommendation(rows) {
     return {
       suggestedNewPrice: 0,
       percentDifferenceFromMarket: 0,
+      aiConfidence: "Low",
+      competitorPressure: "Low",
+      demandLevel: "Low",
       reasoning:
         "No records match current filters. Expand dish or platform filters to generate a recommendation.",
     };
@@ -72,6 +75,21 @@ export function buildRecommendation(rows) {
   const marketGapPercent =
     marketAverage === 0 ? 0 : ((yourCurrentAverage - marketAverage) / marketAverage) * 100;
   const adjustmentMagnitude = Math.round(Math.abs(suggestedNewPrice - yourCurrentAverage));
+  const gapMagnitude = Math.abs(marketGapPercent);
+  const competitorCount = uniqueCount(rows.map((row) => row.restaurantName));
+  const demandMedian = median(rows.map((row) => row.demandIndex));
+
+  let aiConfidence = "Low";
+  if (rows.length >= 18) aiConfidence = "High";
+  else if (rows.length >= 9) aiConfidence = "Medium";
+
+  let competitorPressure = "Low";
+  if (gapMagnitude >= 8 || competitorCount >= 7) competitorPressure = "High";
+  else if (gapMagnitude >= 4 || competitorCount >= 4) competitorPressure = "Medium";
+
+  let demandLevel = "Low";
+  if (demandMedian >= 86) demandLevel = "High";
+  else if (demandMedian >= 78) demandLevel = "Medium";
 
   let reasoning = "Pricing is aligned with market benchmarks. Maintain current pricing for now.";
 
@@ -84,6 +102,9 @@ export function buildRecommendation(rows) {
   return {
     suggestedNewPrice,
     percentDifferenceFromMarket: marketGapPercent,
+    aiConfidence,
+    competitorPressure,
+    demandLevel,
     reasoning,
   };
 }
@@ -170,7 +191,7 @@ export function buildSmartAlerts(currentRows, previousRows = []) {
     });
   }
 
-  return alerts.slice(0, 4);
+  return alerts;
 }
 
 export function buildCompetitorRanking(rows) {

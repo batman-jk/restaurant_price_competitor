@@ -43,7 +43,7 @@ export function renderPriceTable(body, rows) {
   if (rows.length === 0) {
     body.innerHTML = `
       <tr>
-        <td colspan="6">No rows match the selected filters.</td>
+        <td colspan="7">No rows match the selected filters.</td>
       </tr>
     `;
     return;
@@ -65,6 +65,7 @@ export function renderPriceTable(body, rows) {
               ${renderActionButton(row.id, "Decrease", row.selectedAction)}
             </div>
           </td>
+          <td>${renderSignalDot(row.percentageDifference)}</td>
         </tr>
       `;
     })
@@ -74,6 +75,9 @@ export function renderPriceTable(body, rows) {
 export function renderRecommendation(target, recommendation) {
   target.recommendedPrice.textContent = formatCurrency(recommendation.suggestedNewPrice);
   target.percentDiff.textContent = `${recommendation.percentDifferenceFromMarket.toFixed(1)}%`;
+  target.aiConfidence.textContent = recommendation.aiConfidence || "Low";
+  target.competitorPressure.textContent = recommendation.competitorPressure || "Low";
+  target.demandLevel.textContent = recommendation.demandLevel || "Low";
   target.recommendationReason.textContent = recommendation.reasoning;
 }
 
@@ -190,7 +194,7 @@ export function setDatalistOptions(datalist, options) {
 
 export function renderSmartAlerts(container, alerts) {
   if (alerts.length === 0) {
-    container.innerHTML = `<p class="empty-note">No smart alerts in this cycle.</p>`;
+    container.innerHTML = `<p class="empty-note">No smart alerts yet.</p>`;
     return;
   }
 
@@ -198,7 +202,10 @@ export function renderSmartAlerts(container, alerts) {
     .map(
       (alert) => `
         <article class="alert-item ${escapeHtml(alert.level)}">
-          <span class="alert-level">${escapeHtml(alert.level.toUpperCase())}</span>
+          <div class="alert-head">
+            <span class="alert-level">${escapeHtml(alert.level.toUpperCase())}</span>
+            <time class="alert-time">${escapeHtml(alert.arrivedAt || "--:--:--")}</time>
+          </div>
           <p>${escapeHtml(alert.message)}</p>
         </article>
       `
@@ -213,7 +220,6 @@ export function renderCompetitorRanking(container, rankings) {
   }
 
   container.innerHTML = rankings
-    .slice(0, 6)
     .map(
       (rank) => `
         <article class="rank-item">
@@ -290,6 +296,24 @@ function renderActionButton(rowId, actionLabel, selectedAction) {
       ${actionLabel}
     </button>
   `;
+}
+
+function renderSignalDot(percentageDifference) {
+  const level = signalLevelFromDifference(percentageDifference);
+  return `
+    <span
+      class="signal-dot ${level}"
+      title="${escapeHtml(level)} signal"
+      aria-label="${escapeHtml(level)} signal"
+    ></span>
+  `;
+}
+
+function signalLevelFromDifference(value) {
+  if (!Number.isFinite(value)) return "green";
+  if (value > 3 || value < -3) return "red";
+  if ((value > 1.5 && value <= 3) || (value >= -3 && value < -1.5)) return "yellow";
+  return "green";
 }
 
 function escapeHtml(text) {

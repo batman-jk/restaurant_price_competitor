@@ -110,6 +110,9 @@ const dom = {
   priceTableBody: document.getElementById("priceTableBody"),
   recommendedPrice: document.getElementById("recommendedPrice"),
   percentDiff: document.getElementById("percentDiff"),
+  aiConfidence: document.getElementById("aiConfidence"),
+  competitorPressure: document.getElementById("competitorPressure"),
+  demandLevel: document.getElementById("demandLevel"),
   recommendationReason: document.getElementById("recommendationReason"),
   localityInsights: document.getElementById("localityInsights"),
   trendChart: document.getElementById("trendChart"),
@@ -185,7 +188,13 @@ async function refreshMockData() {
     const latest = getLatestSnapshot(rows);
     const currentFiltered = applyFilters(latest, state.filters);
     const previousFiltered = applyFilters(previousLatest, state.filters);
-    state.smartAlerts = buildSmartAlerts(currentFiltered, previousFiltered);
+    const arrivedAt = formatTime(new Date());
+    const newAlerts = buildSmartAlerts(currentFiltered, previousFiltered).map((alert, index) => ({
+      ...alert,
+      id: `${Date.now()}-${index}`,
+      arrivedAt,
+    }));
+    state.smartAlerts = [...newAlerts, ...state.smartAlerts].slice(0, 10);
 
     renderDashboard();
 
@@ -232,6 +241,9 @@ function renderDashboard() {
     {
       recommendedPrice: dom.recommendedPrice,
       percentDiff: dom.percentDiff,
+      aiConfidence: dom.aiConfidence,
+      competitorPressure: dom.competitorPressure,
+      demandLevel: dom.demandLevel,
       recommendationReason: dom.recommendationReason,
     },
     recommendation
@@ -292,11 +304,17 @@ function renderEmptyState() {
     {
       recommendedPrice: dom.recommendedPrice,
       percentDiff: dom.percentDiff,
+      aiConfidence: dom.aiConfidence,
+      competitorPressure: dom.competitorPressure,
+      demandLevel: dom.demandLevel,
       recommendationReason: dom.recommendationReason,
     },
     {
       suggestedNewPrice: 0,
       percentDifferenceFromMarket: 0,
+      aiConfidence: "Low",
+      competitorPressure: "Low",
+      demandLevel: "Low",
       reasoning: "No data available.",
     }
   );

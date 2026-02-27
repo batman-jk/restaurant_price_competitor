@@ -42,6 +42,7 @@ body {
   border: 1px solid var(--line);
   border-radius: 14px;
   box-shadow: var(--shadow);
+  height: auto;
 }
 
 .topbar {
@@ -299,8 +300,30 @@ tbody tr:hover {
   color: #b91c1c;
 }
 
+.signal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.signal-dot.green {
+  background: #22c55e;
+}
+
+.signal-dot.yellow {
+  background: #eab308;
+}
+
+.signal-dot.red {
+  background: #ef4444;
+}
+
 .visual-card {
   padding: 0.85rem;
+  align-self: start;
+  height: auto;
 }
 
 .visual-card h2 {
@@ -335,6 +358,14 @@ tbody tr:hover {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
+}
+
+.recommendation-card,
+.locality-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
 }
 
 .recommendation-grid {
@@ -342,6 +373,26 @@ tbody tr:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
+}
+
+.recommendation-meta {
+  margin-top: 0.7rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.meta-pill {
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 0.45rem 0.52rem;
+}
+
+.meta-pill strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.84rem;
 }
 
 .label {
@@ -372,6 +423,29 @@ tbody tr:hover {
 .locality-list {
   display: grid;
   gap: 0.58rem;
+  max-height: 40vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b6c5de transparent;
+}
+
+.locality-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.locality-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.locality-list::-webkit-scrollbar-thumb {
+  background: #c3d0e5;
+  border-radius: 999px;
+}
+
+.locality-list::-webkit-scrollbar-thumb:hover {
+  background: #aebed8;
 }
 
 .locality-item {
@@ -437,6 +511,35 @@ tbody tr:hover {
   display: grid;
   gap: 0.55rem;
   margin-top: 0.5rem;
+  --visible-items: 3;
+  --item-min-height: 88px;
+  max-height: calc((var(--item-min-height) * var(--visible-items)) + (0.55rem * 2));
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b6c5de transparent;
+}
+
+.alerts-list::-webkit-scrollbar,
+.ranking-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alerts-list::-webkit-scrollbar-track,
+.ranking-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.alerts-list::-webkit-scrollbar-thumb,
+.ranking-list::-webkit-scrollbar-thumb {
+  background: #c3d0e5;
+  border-radius: 999px;
+}
+
+.alerts-list::-webkit-scrollbar-thumb:hover,
+.ranking-list::-webkit-scrollbar-thumb:hover {
+  background: #aebed8;
 }
 
 .alert-item {
@@ -444,6 +547,7 @@ tbody tr:hover {
   border-radius: 10px;
   padding: 0.56rem 0.62rem;
   background: #f8fbff;
+  min-height: 88px;
 }
 
 .alert-level {
@@ -451,7 +555,19 @@ tbody tr:hover {
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.06em;
+}
+
+.alert-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
   margin-bottom: 0.28rem;
+}
+
+.alert-time {
+  font-size: 0.72rem;
+  color: var(--muted);
 }
 
 .alert-item p {
@@ -496,6 +612,7 @@ tbody tr:hover {
   justify-content: space-between;
   gap: 0.55rem;
   align-items: center;
+  min-height: 88px;
 }
 
 .rank-main {
@@ -649,6 +766,10 @@ tbody tr:hover {
   }
 
   .recommendation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendation-meta {
     grid-template-columns: 1fr;
   }
 
