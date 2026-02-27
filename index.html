@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Competitor Price Watcher</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar card">
+        <div>
+          <p class="eyebrow">Pricing Intelligence Suite</p>
+          <h1><span id="highlightRestaurant" class="highlight-restaurant">Paradise</span></h1>
+          <p class="subtext">a legend since 1953</p>
+        </div>
+        <div class="status-pill" id="scrapeStatus">Monitoring mock feeds...</div>
+      </header>
+
+      <section class="controlbar card">
+        <label>
+          Dish Search
+          <input
+            id="dishSearch"
+            list="dishOptions"
+            type="text"
+            placeholder="Search and select dish"
+          />
+          <datalist id="dishOptions"></datalist>
+        </label>
+        <label>
+          Platform Filter
+          <select id="platformFilter"></select>
+        </label>
+        <label>
+          Restaurant Filter
+          <select id="restaurantFilter"></select>
+        </label>
+        <button type="button" id="refreshMock">Simulate Rescrape</button>
+      </section>
+
+      <section class="kpi-grid" id="kpiGrid"></section>
+
+      <section class="workspace">
+        <article class="card table-card">
+          <div class="section-head">
+            <h2>Competitor Price Table</h2>
+            <span id="rowCount" class="meta-note">0 rows</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Restaurant Name</th>
+                  <th>Dish Name</th>
+                  <th>
+                    <button id="sortPrice" class="sort-btn" type="button">
+                      Competitor Price (asc)
+                    </button>
+                  </th>
+                  <th>Your Price</th>
+                  <th>Price Difference (%)</th>
+                  <th>Action Control</th>
+                </tr>
+              </thead>
+              <tbody id="priceTableBody"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="side-stack">
+          <article class="card visual-card">
+            <h2 id="restaurantSpotlightTitle">Restaurant Spotlight</h2>
+            <img id="restaurantImage" alt="Selected restaurant" />
+            <div id="foodThumbs" class="food-thumbs"></div>
+          </article>
+
+          <article class="card recommendation-card">
+            <h2>AI Pricing Recommendation Engine</h2>
+            <div class="recommendation-grid">
+              <div>
+                <p class="label">Suggested New Price</p>
+                <strong id="recommendedPrice">INR 0</strong>
+              </div>
+              <div>
+                <p class="label">% vs Market Average</p>
+                <strong id="percentDiff">0%</strong>
+              </div>
+            </div>
+            <p id="recommendationReason" class="reasoning"></p>
+          </article>
+
+          <article class="card locality-card">
+            <h2>Locality Comparison</h2>
+            <p class="subnote">Average competitor price and opportunity signals.</p>
+            <div id="localityInsights" class="locality-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="insight-grid">
+        <article class="card alerts-card">
+          <h2>Smart Alerts</h2>
+          <p class="subnote">Generated after each simulated rescrape.</p>
+          <div id="smartAlerts" class="alerts-list"></div>
+        </article>
+
+        <article class="card ranking-card">
+          <h2>Competitor Ranking</h2>
+          <p class="subnote">Ranked by competitiveness score and median price.</p>
+          <div id="competitorRanking" class="ranking-list"></div>
+        </article>
+      </section>
+
+      <section class="card trend-card">
+        <div class="section-head">
+          <h2>Price Trend Visualization</h2>
+          <div class="legend">
+            <span><i class="legend-dot competitor"></i> Competitor Avg</span>
+            <span><i class="legend-dot yours"></i> Your Price</span>
+          </div>
+        </div>
+        <svg id="trendChart" viewBox="0 0 860 280" aria-label="Price trend line chart"></svg>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
