@@ -93,7 +93,6 @@ const state = {
     platform: "All",
     restaurant: "All",
   },
-  manualAdjustments: {},
   smartAlerts: [],
   sortDirection: "asc",
 };
@@ -168,18 +167,7 @@ function bindEvents() {
 
     const action = button.dataset.action;
     if (!action) return;
-
-    const step = getActionStepSize();
-    const scopedRows = getActionScopeRows();
-
-    scopedRows.forEach((row) => {
-      const currentAdjustment = state.manualAdjustments[row.id] || 0;
-      if (action === "Increase") state.manualAdjustments[row.id] = currentAdjustment + step;
-      if (action === "Decrease") state.manualAdjustments[row.id] = currentAdjustment - step;
-      if (action === "Maintain") state.manualAdjustments[row.id] = 0;
-    });
-
-    renderDashboard();
+    applyScopedAction(action);
   });
 }
 
@@ -191,7 +179,6 @@ async function refreshMockData() {
     const previousLatest = getLatestSnapshot(state.rows);
     const rows = await simulatePriceScrape();
     state.rows = rows;
-    state.manualAdjustments = {};
 
     hydrateFilters(rows);
 
@@ -233,11 +220,7 @@ function renderDashboard() {
   const metrics = calculateOverviewMetrics(filteredLatest);
 
   const sortedRows = sortRowsByCompetitorPrice(filteredLatest, state.sortDirection);
-  const tableRows = enrichRowsWithSuggestions(
-    sortedRows,
-    state.manualAdjustments,
-    metrics.yourCurrentPrice
-  );
+  const tableRows = enrichRowsWithSuggestions(sortedRows);
   const recommendation = buildRecommendation(filteredLatest);
   const localityInsights = buildLocalityInsights(filteredLatest);
   const rankings = buildCompetitorRanking(filteredLatest);
@@ -409,13 +392,40 @@ function applyDishSelection(inputValue) {
   dom.dishSearch.value = state.filters.dish;
 }
 
-function getActionScopeRows() {
-  return state.rows.filter((row) => {
-    const dishMatch = state.filters.dish ? row.dishName === state.filters.dish : true;
-    const platformMatch =
-      state.filters.platform === "All" || row.platform === state.filters.platform;
-    const restaurantMatch =
-      state.filters.restaurant === "All" || row.restaurantName === state.filters.restaurant;
-    return dishMatch && platformMatch && restaurantMatch;
+function applyScopedAction(action) {
+  if (!["Increase", "Maintain", "Decrease"].includes(action)) return;
+
+  const latestRows = getLatestSnapshot(state.rows);
+  if (latestRows.length === 0) return;
+
+  const scopedLatestRows = applyFilters(latestRows, state.filters);
+  if (scopedLatestRows.length === 0) return;
+
+  const latestDate = latestRows[0].date;
+  const scopedKeys = new Set(scopedLatestRows.map(toScopedKey));
+  const step = getActionStepSize();
+
+  state.rows = state.rows.map((row) => {
+    if (row.date !== latestDate) return row;
+    if (!scopedKeys.has(toScopedKey(row))) return row;
+
+    if (action === "Maintain") {
+      return {
+        ...row,
+        yourPrice: row.baseYourPrice ?? row.yourPrice,
+      };
+    }
+
+    const delta = action === "Increase" ? step : -step;
+    return {
+      ...row,
+      yourPrice: Math.max(100, row.yourPrice + delta),
+    };
   });
+
+  renderDashboard();
+}
+
+function toScopedKey(row) {
+  return `${row.dishName}__${row.platform}__${row.restaurantName}`;
 }

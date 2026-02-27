@@ -2,37 +2,25 @@ const SMALL_MARGIN = 8;
 const ACTION_THRESHOLD = 8;
 const ACTION_STEP = 5;
 
-export function applyManualActions(rows, adjustmentByRowId = {}) {
-  return rows.map((row) => {
-    const rowAdjustment = adjustmentByRowId[row.id] || 0;
-    if (rowAdjustment === 0) return row;
-    return {
-      ...row,
-      yourPrice: Math.max(100, row.yourPrice + rowAdjustment),
-    };
-  });
-}
-
 export function getActionStepSize() {
   return ACTION_STEP;
 }
 
-export function enrichRowsWithSuggestions(rows, adjustmentByRowId = {}, referenceYourPrice = 0) {
+export function enrichRowsWithSuggestions(rows) {
   return rows.map((row) => {
-    const manualAdjustment = adjustmentByRowId[row.id] || 0;
-    const effectiveYourPrice = Math.max(100, referenceYourPrice + manualAdjustment);
+    const effectiveYourPrice = row.yourPrice;
+    const baseYourPrice = row.baseYourPrice ?? row.yourPrice;
     const priceDifference = effectiveYourPrice - row.competitorPrice;
-    const referenceDifference = referenceYourPrice - row.competitorPrice;
     const percentageDifference =
-      row.competitorPrice === 0 ? 0 : (referenceDifference / row.competitorPrice) * 100;
+      row.competitorPrice === 0 ? 0 : (priceDifference / row.competitorPrice) * 100;
     let actionSuggestion = "Maintain";
 
     if (priceDifference > ACTION_THRESHOLD) actionSuggestion = "Decrease";
     if (priceDifference < -ACTION_THRESHOLD) actionSuggestion = "Increase";
 
     let selectedAction = "Maintain";
-    if (manualAdjustment > 0) selectedAction = "Increase";
-    if (manualAdjustment < 0) selectedAction = "Decrease";
+    if (effectiveYourPrice > baseYourPrice) selectedAction = "Increase";
+    if (effectiveYourPrice < baseYourPrice) selectedAction = "Decrease";
 
     return {
       ...row,

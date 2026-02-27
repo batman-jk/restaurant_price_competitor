@@ -185,6 +185,7 @@ function generateMockDataset(iteration) {
             locality: competitor.locality,
             competitorPrice,
             yourPrice,
+            baseYourPrice: yourPrice,
             demandIndex: competitor.demandIndex,
           });
         }
