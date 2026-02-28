@@ -1396,3 +1396,218 @@ tbody tr:hover {
 .table-wrap tbody tr:hover {
   background: rgba(212, 175, 55, 0.16);
 }
+
+.brand-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.restaurant-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+}
+
+.site-footer {
+  padding: 0.9rem;
+  display: grid;
+  gap: 0.3rem;
+  color: #2f2f2f;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.site-footer .footer-meta {
+  margin-top: 0.3rem;
+  color: #6f6f6f;
+  font-size: 0.8rem;
+}
+
+/* Top-section food backgrounds */
+.topbar,
+.controlbar {
+  position: relative;
+  isolation: isolate;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-color: rgba(212, 175, 55, 0.45);
+}
+
+.topbar {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58)),
+    url("/images/paradise2.jpg");
+}
+
+.controlbar {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
+    url("/images/paradise2.jpg");
+}
+
+.topbar::before,
+.controlbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(1.8px);
+  -webkit-backdrop-filter: blur(1.8px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.topbar > *,
+.controlbar > * {
+  position: relative;
+  z-index: 1;
+}
+
+.topbar.card::after,
+.controlbar.card::after {
+  display: none;
+}
+
+.topbar .eyebrow,
+.topbar h1,
+.topbar .subtext,
+.topbar .status-pill {
+  color: #fff9ee;
+}
+
+.topbar .highlight-restaurant {
+  background: rgba(212, 175, 55, 0.24);
+  color: #fff9ee;
+  border-color: rgba(212, 175, 55, 0.75);
+}
+
+.topbar .status-pill {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(212, 175, 55, 0.65);
+}
+
+.controlbar label {
+  color: #fff7e5;
+}
+
+.controlbar select,
+.controlbar #refreshMock,
+.controlbar #dishSearch {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fffef8;
+}
+
+.controlbar #dishSearch::placeholder {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.controlbar select option {
+  background: #ffffff;
+  color: #111111;
+}
+
+.controlbar #refreshMock {
+  background: rgba(212, 175, 55, 0.92);
+  color: #111111;
+  border-color: #d4af37;
+}
+
+.controlbar #refreshMock:hover {
+  background: #e2bf57;
+  color: #111111;
+  border-color: #e2bf57;
+}
+
+/* Continuous hero image across top two sections */
+.hero-stack {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  background-image: url("/images/paradise2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.hero-stack::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-stack .topbar,
+.hero-stack .controlbar {
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.22);
+  border-color: rgba(212, 175, 55, 0.45);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-stack .topbar::before,
+.hero-stack .controlbar::before,
+.hero-stack .topbar::after,
+.hero-stack .controlbar::after {
+  display: none;
+}
+
+/* Graph outlines only (black + gold) */
+.trend-card svg {
+  background: transparent;
+}
+
+.competitor-line,
+.your-line {
+  fill: none;
+}
+
+.competitor-line {
+  stroke: #111111;
+}
+
+.your-line {
+  stroke: #d4af37;
+}
+
+.competitor-point,
+.your-point {
+  fill: none;
+  stroke-width: 2;
+}
+
+.competitor-point {
+  stroke: #111111;
+}
+
+.your-point {
+  stroke: #d4af37;
+}
+
+.legend-dot.competitor,
+.legend-dot.yours {
+  background: transparent;
+  border: 2px solid;
+}
+
+.legend-dot.competitor {
+  border-color: #111111;
+}
+
+.legend-dot.yours {
+  border-color: #d4af37;
+}

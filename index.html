@@ -4,40 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Restaurant Competitor Price Watcher</title>
+    <link rel="icon" type="image/png" href="/images/paradise_nani.png" />
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
     <div class="app">
-      <header class="topbar card">
-        <div>
-          <p class="eyebrow">Pricing Intelligence Suite</p>
-          <h1><span id="highlightRestaurant" class="highlight-restaurant">Paradise</span></h1>
-          <p class="subtext">a legend since 1953</p>
-        </div>
-        <div class="status-pill" id="scrapeStatus">Monitoring mock feeds...</div>
-      </header>
+      <div class="hero-stack">
+        <header class="topbar card">
+          <div class="brand-head">
+            <img class="restaurant-logo" src="/images/paradise_nani.png" alt="Paradise restaurant logo" />
+            <div>
+              <p class="eyebrow">Pricing Intelligence Suite</p>
+              <h1><span id="highlightRestaurant" class="highlight-restaurant">Paradise</span></h1>
+              <p class="subtext">a legend since 1953</p>
+            </div>
+          </div>
+          <div class="status-pill" id="scrapeStatus">Monitoring mock feeds...</div>
+        </header>
 
-      <section class="controlbar card">
-        <label>
-          Dish Search
-          <input
-            id="dishSearch"
-            list="dishOptions"
-            type="text"
-            placeholder="Search and select dish"
-          />
-          <datalist id="dishOptions"></datalist>
-        </label>
-        <label>
-          Platform Filter
-          <select id="platformFilter"></select>
-        </label>
-        <label>
-          Restaurant Filter
-          <select id="restaurantFilter"></select>
-        </label>
-        <button type="button" id="refreshMock">Simulate Rescrape</button>
-      </section>
+        <section class="controlbar card">
+          <label>
+            Dish Search
+            <input
+              id="dishSearch"
+              list="dishOptions"
+              type="text"
+              placeholder="Search and select dish"
+            />
+            <datalist id="dishOptions"></datalist>
+          </label>
+          <label>
+            Platform Filter
+            <select id="platformFilter"></select>
+          </label>
+          <label>
+            Restaurant Filter
+            <select id="restaurantFilter"></select>
+          </label>
+          <button type="button" id="refreshMock">Simulate Rescrape</button>
+        </section>
+      </div>
 
       <section class="kpi-grid" id="kpiGrid"></section>
 
@@ -137,6 +143,13 @@
         </div>
         <svg id="trendChart" viewBox="0 0 860 280" aria-label="Price trend line chart"></svg>
       </section>
+
+      <footer class="card site-footer">
+        <p><strong>Contact:</strong> paradise@gmail.com</p>
+        <p><strong>Help Desk:</strong> For pricing support, write to paradise@gmail.com or call +91 90000 12345.</p>
+        <p><strong>Office Hours:</strong> Mon-Sat, 10:00 AM - 7:00 PM</p>
+        <p class="footer-meta">© 2026 Paradise Pricing Intelligence. All rights reserved.</p>
+      </footer>
     </div>
 
     <script type="module" src="/src/main.js"></script>
