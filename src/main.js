@@ -98,6 +98,7 @@ const state = {
 };
 
 const dom = {
+  appShell: document.querySelector(".app"),
   scrapeStatus: document.getElementById("scrapeStatus"),
   refreshMock: document.getElementById("refreshMock"),
   dishSearch: document.getElementById("dishSearch"),
@@ -123,10 +124,15 @@ const dom = {
   foodThumbs: document.getElementById("foodThumbs"),
 };
 
+const SCROLL_REVEAL_SELECTOR =
+  ".card, .kpi-card, .locality-item, .alert-item, .rank-item, .food-thumbs img";
+let scrollRevealObserver = null;
+
 bootstrap();
 
 async function bootstrap() {
   bindEvents();
+  initScrollAnimations();
   await refreshMockData();
 }
 
@@ -172,6 +178,53 @@ function bindEvents() {
     if (!action) return;
     applyScopedAction(action);
   });
+}
+
+function initScrollAnimations() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!("IntersectionObserver" in window) || prefersReducedMotion) {
+    revealWithoutAnimation();
+    return;
+  }
+
+  scrollRevealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        scrollRevealObserver.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.18,
+      rootMargin: "0px 0px -10% 0px",
+    }
+  );
+
+  registerScrollAnimationTargets();
+}
+
+function registerScrollAnimationTargets() {
+  const root = dom.appShell || document;
+  const targets = root.querySelectorAll(SCROLL_REVEAL_SELECTOR);
+  targets.forEach((target, index) => {
+    if (target.dataset.scrollRevealReady === "true") return;
+    target.dataset.scrollRevealReady = "true";
+    target.classList.add("scroll-reveal");
+    target.style.setProperty("--reveal-delay", `${(index % 6) * 55}ms`);
+
+    if (!scrollRevealObserver) {
+      target.classList.add("is-visible");
+      return;
+    }
+    scrollRevealObserver.observe(target);
+  });
+}
+
+function revealWithoutAnimation() {
+  const root = dom.appShell || document;
+  const targets = root.querySelectorAll(SCROLL_REVEAL_SELECTOR);
+  targets.forEach((target) => target.classList.add("is-visible"));
 }
 
 async function refreshMockData() {
@@ -257,6 +310,7 @@ function renderDashboard() {
 
   dom.rowCount.textContent = `${tableRows.length} rows`;
   dom.sortPrice.textContent = `Competitor Price (${state.sortDirection})`;
+  registerScrollAnimationTargets();
 }
 
 function renderRestaurantSpotlight(rows) {
@@ -326,6 +380,7 @@ function renderEmptyState() {
   dom.restaurantImage.src = fallbackRestaurantImage();
   dom.foodThumbs.innerHTML = "";
   dom.rowCount.textContent = "0 rows";
+  registerScrollAnimationTargets();
 }
 
 function sortRowsByCompetitorPrice(rows, direction) {
